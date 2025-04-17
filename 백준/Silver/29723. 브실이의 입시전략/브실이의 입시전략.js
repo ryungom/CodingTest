@@ -3,41 +3,38 @@ let input = require("fs")
   .toString()
   .split("\n")
   .map((line) => line.replace("\r", "").split(" "));
-
 const [nums, ...rest] = input;
-const [N, M, K] = nums.map(Number);
-const subjects = rest.slice(0, N);
-const must = rest.slice(N, N + K).flat();
+const subject = rest.slice(0, Number(nums[0]));
+const must = rest.slice(Number(nums[0], nums[0] + nums[2]));
 
-// 과목을 점수 기준으로 정렬
-const sortedSubjects = subjects.sort((a, b) => Number(a[1]) - Number(b[1]));
-const subjectMap = new Map(sortedSubjects.map((sub) => [sub[0], Number(sub[1])]));
+function solution(nums, subject, must) {
+  const sort = subject.sort((a, b) => a[1] - b[1]);
+  let min = 0;
+  let max = 0;
+  const arr = new Map();
+  sort.forEach((value) => {
+    arr.set(value[0], value[1]);
+  });
+  must.forEach((value) => {
+    if (arr.has(value[0])) {
+      min += Number(arr.get(value[0]));
+      max += Number(arr.get(value[0]));
+      arr.delete(value[0]);
+    }
+  });
 
-let minScore = 0;
-let maxScore = 0;
-const remainingSubjects = [];
+  // 최소, 최대값 구하기
+  const setArr = Array.from(arr);
 
-// 필수 과목 처리
-must.forEach((subject) => {
-  if (subjectMap.has(subject)) {
-    const score = subjectMap.get(subject);
-    minScore += score;
-    maxScore += score;
-    subjectMap.delete(subject);
+  let viewNum = nums[1] - nums[2];
+  for (let i = 0; i < viewNum; i++) {
+    min += Number(setArr[i][1]);
   }
-});
+  for (let i = nums[0] - nums[2]; i > nums[0] - nums[2] - viewNum; i--) {
+    max += Number(setArr[i - 1][1]);
+  }
 
-// 남은 과목 분리 및 정렬
-subjectMap.forEach((value, key) => remainingSubjects.push(value));
-remainingSubjects.sort((a, b) => a - b);
-
-const viewNum = M - K;
-if (viewNum > 0) {
-  // 최소값 계산 (가장 낮은 점수 선택)
-  minScore += remainingSubjects.slice(0, viewNum).reduce((a, b) => a + b, 0);
-
-  // 최대값 계산 (가장 높은 점수 선택)
-  maxScore += remainingSubjects.slice(-viewNum).reduce((a, b) => a + b, 0);
+  return console.log(min, max);
 }
 
-console.log(minScore, maxScore);
+solution(nums, subject, must);
