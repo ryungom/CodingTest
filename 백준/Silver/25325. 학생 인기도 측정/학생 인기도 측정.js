@@ -5,11 +5,9 @@ let input = require("fs")
   .map((line) => line.replace("\r", "").split(" "));
 
 // input 들어오는거 싹 정리
-const [nums, kindStu, ...rest] = input;
-const kindNum = Number(nums[0]);
-const lovers = rest.slice(0, kindNum);
+const [, kindStu, ...lovers] = input;
 
-function solution(kindNum, kindStu, lovers) {
+function solution(kindStu, lovers) {
   const result = new Map();
   kindStu.forEach((value) => result.set(value, 0));
 
@@ -30,4 +28,4 @@ function solution(kindNum, kindStu, lovers) {
   return sort;
 }
 
-solution(kindNum, kindStu, lovers);
+solution(kindStu, lovers);
